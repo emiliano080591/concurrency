@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/alexedwards/scs/v2"
+	"github.com/emiliano080591/concurrency/project_email/data"
 	"log"
 	"sync"
 )
@@ -13,6 +14,7 @@ type Config struct {
 	InfoLog  *log.Logger
 	ErrorLog *log.Logger
 	Wait     *sync.WaitGroup
+	Models   data.Models
 }
 
 func (app *Config) shutdown() {

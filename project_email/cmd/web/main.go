@@ -2,9 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/redisstore"
 	"github.com/alexedwards/scs/v2"
+	"github.com/emiliano080591/concurrency/project_email/data"
 	"github.com/gomodule/redigo/redis"
 	"log"
 	"net/http"
@@ -49,6 +51,7 @@ func main() {
 		InfoLog:  infoLog,
 		ErrorLog: errorLog,
 		Wait:     &wg,
+		Models:   data.New(db),
 	}
 	// set up mail
 
@@ -72,6 +75,8 @@ func (app *Config) serve() {
 }
 
 func initSession() *scs.SessionManager {
+	gob.Register(data.User{})
+	
 	// set up session
 	session := scs.New()
 	session.Store = redisstore.New(initRedis())
