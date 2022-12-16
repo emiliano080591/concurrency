@@ -54,7 +54,8 @@ func main() {
 		Models:   data.New(db),
 	}
 	// set up mail
-
+	app.Mailer = app.createEmail()
+	go app.listenForMail()
 	// listen for signals
 	go app.listenForShutdown()
 	// listen for web connections
@@ -76,7 +77,7 @@ func (app *Config) serve() {
 
 func initSession() *scs.SessionManager {
 	gob.Register(data.User{})
-	
+
 	// set up session
 	session := scs.New()
 	session.Store = redisstore.New(initRedis())
