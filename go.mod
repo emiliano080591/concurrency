@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/alexedwards/scs/redisstore v0.0.0-20221206171621-0f0849773278
 	github.com/alexedwards/scs/v2 v2.5.0
+	github.com/bwmarrin/go-alone v0.0.0-20190806015146-742bb55d1631
 	github.com/fatih/color v1.13.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/gomodule/redigo v1.8.0
