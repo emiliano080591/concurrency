@@ -46,20 +46,35 @@ func main() {
 	wg := sync.WaitGroup{}
 	// set up the application config
 	app := Config{
-		Session:  session,
-		DB:       db,
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
-		Wait:     &wg,
-		Models:   data.New(db),
+		Session:       session,
+		DB:            db,
+		InfoLog:       infoLog,
+		ErrorLog:      errorLog,
+		Wait:          &wg,
+		Models:        data.New(db),
+		ErrorChan:     make(chan error),
+		ErrorChanDone: make(chan bool),
 	}
 	// set up mail
 	app.Mailer = app.createEmail()
 	go app.listenForMail()
 	// listen for signals
 	go app.listenForShutdown()
+	// listen for errors
+	go app.listenForErrors()
 	// listen for web connections
 	app.serve()
+}
+
+func (app *Config) listenForErrors() {
+	for {
+		select {
+		case err := <-app.ErrorChan:
+			app.ErrorLog.Println(err)
+		case <-app.ErrorChanDone:
+			return
+		}
+	}
 }
 
 func (app *Config) serve() {
